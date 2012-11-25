@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Ubercart Paymill Integration module.
+ */
+
+/**
+ * Globals used in the module
+ */
+// Paymill API endpoint; this will be used as a default in case the user did
+// not enter a new one in the admin.
+define('UC_PAYMILL_API', 'https://api.paymill.de/v2/');
+
+/**
+ * Implements hook_uc_payment_gateway().
+ */
+function uc_paymill_uc_payment_gateway() {
+  $gateways['paymill'] = array(
+    'title' => t('Paymill'),
+    'description' => t('Process credit card payments through Paymill payment system.'),
+    'credit' => 'uc_paymill_charge',
+  );
+
+  return $gateways;
+}
+
+/**
+ * Callback function to perform the charge operation.
+ */
+function uc_paymill_charge($order_id, $amount, $data) {
+  
+  global $user;
+
+  // 
+
+}
