@@ -6,7 +6,7 @@
  */
 
 /**
- * Globals used in the module
+ * Globals used in the module.
  */
 // Paymill API endpoint; this will be used as a default in case the user did
 // not enter a new one in the admin.
@@ -34,4 +34,35 @@ function uc_paymill_charge($order_id, $amount, $data) {
 
   // 
 
+}
+
+/**
+ * Implements hook_libraries_info().
+ */
+function uc_paymill_libraries_info() {
+  $libraries['paymill'] = array(
+    'name' => 'Paymill',
+    'vendor' => 'http://www.paymill.com/',
+    'download_url' => 'https://github.com/Paymill/Paymill-PHP/archive/master.zip',
+    'path' => 'lib/Services/Paymill',
+    'version arguments' => array(
+      'file' => 'lib/Services/Paymill/Apiclient/Curl.php',
+      'pattern' => '@Paymill-php/([0-9\.]+)@',
+      'lines' => 40,
+    ),
+    'files' => array(
+      'php' => array(
+        'Clients.php',
+        'Coupons.php',
+        'Exception.php',
+        'Offers.php',
+        'Payments.php',
+        'Refunds.php',
+        'Subscriptions.php',
+        'Transactions.php',
+      ),
+    ),
+  );
+
+  return $libraries;
 }
