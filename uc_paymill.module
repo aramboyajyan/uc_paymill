@@ -18,6 +18,42 @@ define('UC_PAYMILL_TEST', 'test');
 define('UC_PAYMILL_LIVE', 'live');
 
 /**
+ * Implements hook_uc_payment_method().
+ */
+function uc_paymill_uc_payment_method() {
+  $methods['paymill'] = array(
+    'name' => t('Paymill'),
+    'title' => t('Credit card via Paymill'),
+    'review' => t('Credit card'),
+    'callback' => 'uc_payment_method_paymill',
+    'redirect' => 'uc_paymill_checkout_form',
+    'weight' => 5,
+    'checkout' => TRUE,
+    'no_gateway' => TRUE,
+  );
+
+  return $methods;
+}
+
+/**
+ * Form - adds the Paymill checkout form for finalizing the order.
+ */
+function uc_paymill_checkout_form($form, &$form_state) {
+  $form['placeholder']['#markup'] = t('Element placeholder.');
+
+  return $form;
+}
+
+/**
+ * Checkout callback form, called when the user selects this payment type.
+ */
+function uc_payment_method_paymill($op, &$order, $form = NULL, &$form_state = NULL) {
+  $form['placeholder']['#markup'] = t('Element placeholder.');
+
+  return $form;
+}
+
+/**
  * Implements hook_libraries_info().
  */
 function uc_paymill_libraries_info() {
