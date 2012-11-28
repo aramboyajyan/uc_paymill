@@ -18,30 +18,6 @@ define('UC_PAYMILL_TEST', 'test');
 define('UC_PAYMILL_LIVE', 'live');
 
 /**
- * Implements hook_uc_payment_gateway().
- */
-function uc_paymill_uc_payment_gateway() {
-  $gateways['paymill'] = array(
-    'title' => t('Paymill'),
-    'description' => t('Process credit card payments through Paymill payment system.'),
-    'credit' => 'uc_paymill_charge',
-  );
-
-  return $gateways;
-}
-
-/**
- * Callback function to perform the charge operation.
- */
-function uc_paymill_charge($order_id, $amount, $data) {
-  
-  global $user;
-
-  // 
-
-}
-
-/**
  * Implements hook_libraries_info().
  */
 function uc_paymill_libraries_info() {
