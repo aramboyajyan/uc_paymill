@@ -6,7 +6,7 @@
  */
 
 /**
- * Globals used in the module.
+ * Constants used in the module.
  */
 // Paymill API endpoint; this will be used as a default in case the user did
 // not enter a new one in the admin.
