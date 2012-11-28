@@ -5,3 +5,33 @@
  * Contains install and update functions as well as libraries requirements.
  */
 
+/**
+ * Implements hook_requirements().
+ */
+function uc_paymill_requirements($phase) {
+  $t = get_t();
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Check if Paymill library is installed.
+    $library = libraries_detect('paymill');
+    if (!empty($library['installed'])) {
+      $value = $library['version'];
+      $description = NULL;
+      $severity = REQUIREMENT_OK;
+    }
+    else {
+      $value = $t('Not installed');
+      $description = $library['error message'];
+      $severity = REQUIREMENT_ERROR;
+    }
+    $requirements['uc_paymill_library'] = array(
+      'title' => $t('Paymill library'),
+      'value' => $value,
+      'description' => $description,
+      'severity' => $severity,
+    );
+  }
+
+  return $requirements;
+}
