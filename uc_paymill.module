@@ -11,6 +11,11 @@
 // Paymill API endpoint; this will be used as a default in case the user did
 // not enter a new one in the admin.
 define('UC_PAYMILL_API', 'https://api.paymill.de/v2/');
+// URL to the Paymill JS bridge.
+define('UC_PAYMILL_BRIDGE', 'https://bridge.paymill.com/');
+// Test/live statuses.
+define('UC_PAYMILL_TEST', 'test');
+define('UC_PAYMILL_LIVE', 'live');
 
 /**
  * Implements hook_uc_payment_gateway().
