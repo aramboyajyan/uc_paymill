@@ -35,3 +35,11 @@ function uc_paymill_requirements($phase) {
 
   return $requirements;
 }
+
+/**
+ * Implements hook_uninstall().
+ */
+function uc_paymill_uninstall() {
+  // Remove all variables used in the module at once.
+  db_query("DELETE FROM {variable} WHERE `name` LIKE :variables", array(':variables' => 'uc_paymill_%'));
+}
