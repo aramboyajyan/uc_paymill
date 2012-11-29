@@ -11,8 +11,62 @@
   Drupal.behaviors.UCPaymill = {
     
     attach: function(context, settings) {
-      // 
-      
+      // Configure Paymill bridge and define the submit button.
+      window.PAYMILL_PUBLIC_KEY = settings.ucPaymill.publicKey;
+      var checkoutButton = $('#edit-continue');
+      var paymillPaymentMethod = 'paymill';
+      var currentPaymentMethodSelector = '#edit-panes-payment-payment-method input[type="radio"]:checked';
+      // Check if Paymill is initially selected.
+      if ($(currentPaymentMethodSelector).val() == paymillPaymentMethod) {
+        checkoutButton.unbind('click', ucPaymillSubmit).bind('click', ucPaymillSubmit);
+      }
+      else {
+        checkoutButton.unbind('click', ucPaymillSubmit);
+      }
+      // Bind token generating function with the submit button.
+      $('#edit-panes-payment-payment-method input[type="radio"]').change(function() {
+        var currentPaymentMethod = $(currentPaymentMethodSelector).val();
+        if (currentPaymentMethod == paymillPaymentMethod) {
+          checkoutButton.unbind('click', ucPaymillSubmit).bind('click', ucPaymillSubmit);
+        }
+        else {
+          checkoutButton.unbind('click', ucPaymillSubmit);
+        }
+      });
+
+      /**
+       * Submit handler function for generating the Paymill token.
+       */
+      function ucPaymillSubmit() {
+        // Build app Paymill parameters for this transaction.
+        var ucPaymillParams = {
+          number:    '',
+          exp_month: '',
+          exp_year:  '',
+          cvc:       '',
+          amount:    '',
+          currency:  ''
+        };
+        // Get the Paymill token
+        paymill.createToken(ucPaymillParams, ucPaymillResponseHandler);
+        return false;
+      }
+
+      /**
+       * Function to be called upon getting the response from Paymill.
+       * 
+       * This function will return either 'result' in case the token was obtained
+       * properly or 'errors' in case something went wrong with the data.
+       */
+      function ucPaymillResponseHandler(error, result) {
+        if (error) {
+          console.log('The following error occurred: ' + error.apierror);
+        }
+        else {
+          console.log('The token was generated successfully.');
+        }
+      }
+
       /**
        * Translates Paymill error codes into meaningful messages.
        */
