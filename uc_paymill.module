@@ -51,9 +51,14 @@ function uc_paymill_checkout_form($form, &$form_state) {
  * Checkout callback form, called when the user selects this payment type.
  */
 function uc_payment_method_paymill($op, &$order, $form = NULL, &$form_state = NULL) {
-  $form['placeholder']['#markup'] = t('Element placeholder.');
-
-  return $form;
+  switch ($op) {
+    case 'cart-details':
+      break;
+    case 'cart-process':
+      break;
+    case 'settings':
+      break;
+  }
 }
 
 /**
