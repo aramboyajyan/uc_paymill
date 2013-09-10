@@ -108,7 +108,7 @@ function uc_paymill_libraries_info() {
   $libraries['paymill'] = array(
     'name' => 'Paymill',
     'vendor' => 'http://www.paymill.com/',
-    'download_url' => 'https://github.com/Paymill/Paymill-PHP/archive/master.zip',
+    'download_url' => 'https://github.com/paymill/paymill-php/archive/master.zip',
     'path' => 'lib/Services/Paymill',
     'version arguments' => array(
       'file' => 'lib/Services/Paymill/Apiclient/Curl.php',
