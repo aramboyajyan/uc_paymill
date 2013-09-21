@@ -23,3 +23,9 @@ files[] = uc_paymill.module
 dependencies[] = libraries
 dependencies[] = uc_payment
 dependencies[] = uc_credit
+
+; ----------------------------------------------------------------------------
+; Other
+; ----------------------------------------------------------------------------
+; Configuration URL
+configure = admin/store/settings/payment/method/credit
