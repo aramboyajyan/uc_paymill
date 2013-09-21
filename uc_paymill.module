@@ -36,7 +36,78 @@ function uc_paymill_uc_payment_gateway() {
 /**
  * Callback for payment gateway settings.
  */
-function uc_paymill_settings_form($form, &$form_state) {}
+function uc_paymill_settings_form($form, &$form_state) {
+  $keys = _uc_paymill_get_keys();
+
+  // General settings.
+  $form['uc_paymill_general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General Settings'),
+    '#collapsible' => FALSE,
+  );
+  $form['uc_paymill_general']['uc_paymill_description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#description' => t('Order description text that will be displayed in Paymill administration pages. You may use [site-name] and [order-id] tokens.'),
+    '#default_value' => variable_get('uc_paymill_description', UC_PAYMILL_DESCRIPTION_PATTERN),
+  );
+  // URL of the Paymill API endpoint.
+  $form['uc_paymill_general']['uc_paymill_api_endpoint'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Endpoint'),
+    '#default_value' => variable_get('uc_paymill_api_endpoint', UC_PAYMILL_API),
+  );
+  // URL of the Paymill bridge scripts.
+  $form['uc_paymill_general']['uc_paymill_bridge'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Bridge URL'),
+    '#default_value' => variable_get('uc_paymill_bridge', UC_PAYMILL_BRIDGE),
+  );
+  // Mode switch.
+  $form['uc_paymill_general']['uc_paymill_mode'] = array(
+    '#type' => 'select',
+    '#title' => t('Operation Mode'),
+    '#default_value' => variable_get('uc_paymill_mode', 'test'),
+    '#options' => array(
+      'live' => t('Live'),
+      'test' => t('Test'),
+    ),
+  );
+  // Test settings.
+  $form['uc_paymill_test'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Test Keys'),
+    '#collapsible' => FALSE,
+  );
+  $form['uc_paymill_test']['uc_paymill_test_private'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Private Keys'),
+    '#default_value' => $keys->test_private,
+  );
+  $form['uc_paymill_test']['uc_paymill_test_public'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Public Keys'),
+    '#default_value' => $keys->test_public,
+  );
+  // Live settings.
+  $form['uc_paymill_live'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Live Keys'),
+    '#collapsible' => FALSE,
+  );
+  $form['uc_paymill_live']['uc_paymill_live_private'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Private Keys'),
+    '#default_value' => $keys->live_private,
+  );
+  $form['uc_paymill_live']['uc_paymill_live_public'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Public Keys'),
+    '#default_value' => $keys->live_public,
+  );
+
+  return $form;
+}
 
 /**
  * Main handler for processing credit card transactions.
