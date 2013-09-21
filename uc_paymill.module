@@ -82,6 +82,64 @@ function uc_paymill_libraries_info() {
 }
 
 /**
+ * Helper function - decrypts the login data for using Auth.Net APIs.
+ */
+function _uc_paymill_get_keys($get_active_keys = FALSE) {
+  static $data;
+
+  if (!empty($data)) {
+    return $data;
+  }
+
+  $test_public  = variable_get('uc_paymill_test_public',  '');
+  $test_private = variable_get('uc_paymill_test_private', '');
+  $live_public  = variable_get('uc_paymill_live_public',  '');
+  $live_private = variable_get('uc_paymill_live_private', '');
+
+  // If CC encryption has been configured properly.
+  if ($key = uc_credit_encryption_key()) {
+    // Setup our encryption object.
+    $crypt = new UbercartEncryption();
+    $test_public  = $crypt->decrypt($key, $test_public);
+    $test_private = $crypt->decrypt($key, $test_private);
+    $live_public  = $crypt->decrypt($key, $live_public);
+    $live_private = $crypt->decrypt($key, $live_private);
+
+    // Store any errors.
+    uc_store_encryption_errors($crypt, 'uc_paymill');
+  }
+
+  $mode = variable_get('uc_paymill_mode', 'live');
+  if ($get_active_keys) {
+    if ($mode == 'live') {
+      // Return only live keys.
+      $data = array(
+        'public'  => $live_public,
+        'private' => $live_private,
+      );
+    }
+    else {
+      // Return only test keys.
+      $data = array(
+        'public'  => $test_public,
+        'private' => $test_private,
+      );
+    }
+  }
+  else {
+    // Return all keys - this is for the admin settings page.
+    $data = array(
+      'test_public'  => $test_public,
+      'test_private' => $test_private,
+      'live_public'  => $live_public,
+      'live_private' => $live_private,
+    );
+  }
+
+  return (object)$data;
+}
+
+/**
  * Helper function - show a human readable message about Paymill error.
  */
 function _uc_paymill_get_error_text($code) {
