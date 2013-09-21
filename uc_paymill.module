@@ -294,6 +294,8 @@ function uc_paymill_charge($order_id, $amount, $data) {
         $response_code = uc_paymill_translate_response_code($payment['response_code']);
       }
       drupal_set_message(t('Payment processing failed. Error message received: @error. @response_code', array('@error' => $payment['error'], '@response_code' => $response_code)), 'error');
+      // Log the error message as well for debugging purposes.
+      watchdog('paymill_error', t('Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array('@error_message' => $payment['error'], '@response_code' => $payment['response_code'], '@status_code' => $payment['http_status_code'])));
     }
   }
   else {
