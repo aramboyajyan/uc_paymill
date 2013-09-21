@@ -175,6 +175,26 @@ function uc_paymill_form_uc_payment_method_settings_form_alter(&$form, &$form_st
 }
 
 /**
+ * Checkout form submit handler.
+ */
+function uc_paymill_checkout_form_submit($form, &$form_state) {
+  // Make sure that either the Paymill token or errors are passed.
+  if ($form_state['values']['token'] == '' && $form_state['values']['errors'] == '') {
+    drupal_set_message(t('An error occurred. Please try again.'), 'error');
+    drupal_goto('cart/checkout');
+  }
+  elseif ($form_state['values']['token'] != '') {
+    // Everything is OK. Pass.
+    drupal_set_message('Everything is alright.');
+    $_SESSION['uc_paymill_token'] = $form_state['values']['token'];
+  }
+  elseif ($form_state['values']['errors'] != '') {
+    drupal_set_message(t('The following error occurred: @uc_paymill_error', array('@uc_paymill_error' => _uc_paymill_get_error_text($form_state['values']['errors']))), 'error');
+    drupal_goto('cart/checkout');
+  }
+}
+
+/**
  * Payment gateway settings form submit handler.
  */
 function uc_paymill_settings_form_submit($form, &$form_state) {
