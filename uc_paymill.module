@@ -20,6 +20,38 @@ define('UC_PAYMILL_BRIDGE', 'https://bridge.paymill.com/');
 define('UC_PAYMILL_DESCRIPTION_PATTERN', 'Payment processed through the [site-name] website.');
 
 /**
+ * Implements hook_uc_payment_gateway().
+ */
+function uc_paymill_uc_payment_gateway() {
+  $gateways['paymill'] = array(
+    'title' => t('Paymill'),
+    'description' => t('Process credit card payments using the Paymill API.'),
+    'settings' => 'uc_paymill_settings_form',
+    'credit' => 'uc_paymill_charge',
+  );
+
+  return $gateways;
+}
+
+/**
+ * Callback for payment gateway settings.
+ */
+function uc_paymill_settings_form($form, &$form_state) {}
+
+/**
+ * Main handler for processing credit card transactions.
+ */
+function uc_paymill_charge($order_id, $amount, $data) {
+  return array(
+    'success' => TRUE,
+    'comment' => 'Comment',
+    'message' => 'Message',
+    'uid'     => 1,
+  );
+}
+
+
+/**
  * Implements hook_libraries_info().
  */
 function uc_paymill_libraries_info() {
