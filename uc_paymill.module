@@ -122,7 +122,22 @@ function uc_paymill_form_uc_payment_method_settings_form_alter(&$form, &$form_st
 /**
  * Payment gateway settings form submit handler.
  */
-function uc_paymill_settings_form_submit($form, &$form_state) {}
+function uc_paymill_settings_form_submit($form, &$form_state) {
+  // If CC encryption has been configured properly.
+  if ($key = uc_credit_encryption_key()) {
+    // Setup our encryption object.
+    $crypt = new UbercartEncryption();
+
+    // Encrypt the Paymill keys.
+    variable_set('uc_paymill_test_public',  $crypt->encrypt($key, $form_state['values']['uc_paymill_test_public']));
+    variable_set('uc_paymill_test_private', $crypt->encrypt($key, $form_state['values']['uc_paymill_test_private']));
+    variable_set('uc_paymill_live_public',  $crypt->encrypt($key, $form_state['values']['uc_paymill_live_public']));
+    variable_set('uc_paymill_live_private', $crypt->encrypt($key, $form_state['values']['uc_paymill_live_private']));
+
+    // Store any errors.
+    uc_store_encryption_errors($crypt, 'uc_paymill');
+  }
+}
 
 /**
  * Payment gateway settings form validation handler.
