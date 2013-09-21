@@ -110,6 +110,61 @@ function uc_paymill_settings_form($form, &$form_state) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form().
+ */
+function uc_paymill_form_uc_cart_checkout_form_alter(&$form, &$form_state) {
+  // Make sure Paymill is selected as default credit card processor.
+  if (variable_get('uc_payment_credit_gateway') == 'paymill') {
+    // Get the public keys.
+    $keys = _uc_paymill_get_keys($get_active_keys = TRUE);
+    // Attach currency code and public keys.
+    $form['#attached']['js'][] = array(
+      'data' => array(
+        'ucPaymill' => array(
+          'currencyCode' => variable_get('uc_currency_code'),
+          'publicKey'    => $keys->public,
+        ),
+      ),
+      'type' => 'setting',
+    );
+    // Add Paymill bridge script.
+    drupal_add_js(variable_get('uc_paymill_bridge'));
+    // Attach main JS file for communication with Paymill.
+    $form['#attached']['js'][] = drupal_get_path('module', 'uc_paymill') . '/uc_paymill.js';
+    // Add hidden field for storing the errors.
+    $form['uc_paymill']['errors'] = array(
+      '#type' => 'hidden',
+      '#attributes' => array('id' => 'uc-paymill-errors'),
+    );
+    // Add hidden field for storing the Paymill token.
+    $form['uc_paymill']['token'] = array(
+      '#type' => 'hidden',
+      '#attributes' => array('id' => 'uc-paymill-token'),
+    );
+    // Add hidden field for storing the total order amount.
+    $total = 0;
+    $order = uc_cart_get_contents();
+    foreach ($order as $product) {
+      $total += $product->sell_price;
+    }
+    $form['uc_paymill']['total'] = array(
+      '#type' => 'hidden',
+      '#value' => $total,
+      '#attributes' => array('id' => 'uc-paymill-order-total'),
+    );
+    // Add text that will be displayed while we are generating Paymill token.
+    // This has to be here because we are processing the payment through JS -
+    // meaning the user should be notified that the process is taking place
+    // and he/she should wait.
+    $form['actions']['continue']['#attributes'] = array(
+      'data-value-default'    => $form['actions']['continue']['#value'],
+      'data-value-processing' => t('Please wait'),
+    );
+    $form['#submit'][] = 'uc_paymill_checkout_form_submit';
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter() for uc_payment_method_settings_form().
  */
 function uc_paymill_form_uc_payment_method_settings_form_alter(&$form, &$form_state) {
