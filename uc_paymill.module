@@ -142,7 +142,24 @@ function uc_paymill_settings_form_submit($form, &$form_state) {
 /**
  * Payment gateway settings form validation handler.
  */
-function uc_paymill_settings_form_validate($form, &$form_state) {}
+function uc_paymill_settings_form_validate($form, &$form_state) {
+  // Make sure all required fields are filled out.
+  if ($form_state['values']['uc_paymill_api_endpoint'] == '') {
+    form_set_error('uc_paymill_api_endpoint', t('Please enter API endpoint URL.'));
+  }
+  if ($form_state['values']['uc_paymill_bridge'] == '') {
+    form_set_error('uc_paymill_bridge', t('Please enter Paymill bridge URL.'));
+  }
+  // Make sure all merchant information is entered for the currently selected
+  // mode.
+  $mode = $form_state['values']['uc_paymill_mode'];
+  if ($form_state['values']['uc_paymill_' . $mode . '_public'] == '') {
+    form_set_error('uc_paymill_' . $mode . '_public', t('Please enter public keys.'));
+  }
+  if ($form_state['values']['uc_paymill_' . $mode . '_private'] == '') {
+    form_set_error('uc_paymill_' . $mode . '_private', t('Please enter private keys.'));
+  }
+}
 
 /**
  * Main handler for processing credit card transactions.
