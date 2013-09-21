@@ -27,3 +27,4 @@ files[] = uc_paymill.module
 ; ------------------------------------------------------------------------------
 dependencies[] = libraries
 dependencies[] = uc_payment
+dependencies[] = uc_credit
