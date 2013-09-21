@@ -110,6 +110,26 @@ function uc_paymill_settings_form($form, &$form_state) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for uc_payment_method_settings_form().
+ */
+function uc_paymill_form_uc_payment_method_settings_form_alter(&$form, &$form_state) {
+  if ($form_state['build_info']['args'][0] == 'credit') {
+    $form['#submit'][]   = 'uc_paymill_settings_form_submit';
+    $form['#validate'][] = 'uc_paymill_settings_form_validate';
+  }
+}
+
+/**
+ * Payment gateway settings form submit handler.
+ */
+function uc_paymill_settings_form_submit($form, &$form_state) {}
+
+/**
+ * Payment gateway settings form validation handler.
+ */
+function uc_paymill_settings_form_validate($form, &$form_state) {}
+
+/**
  * Main handler for processing credit card transactions.
  */
 function uc_paymill_charge($order_id, $amount, $data) {
