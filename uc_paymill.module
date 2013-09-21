@@ -16,9 +16,8 @@
 define('UC_PAYMILL_API', 'https://api.paymill.de/v2/');
 // URL to the Paymill JS bridge.
 define('UC_PAYMILL_BRIDGE', 'https://bridge.paymill.com/');
-// Test/live statuses.
-define('UC_PAYMILL_TEST', 'test');
-define('UC_PAYMILL_LIVE', 'live');
+// Default description text sent over to Paymill for each order.
+define('UC_PAYMILL_DESCRIPTION_PATTERN', 'Payment processed through the [site-name] website.');
 
 /**
  * Implements hook_libraries_info().
