@@ -50,7 +50,6 @@ function uc_paymill_charge($order_id, $amount, $data) {
   );
 }
 
-
 /**
  * Implements hook_libraries_info().
  */
@@ -80,4 +79,53 @@ function uc_paymill_libraries_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Helper function - show a human readable message about Paymill error.
+ */
+function _uc_paymill_get_error_text($code) {
+  switch ($code) {
+    case 'internal_server_error':
+      return t('Communication with Paymill failed.');
+
+    case 'invalid_public_key':
+      return t('Invalid public key.');
+
+    case 'unknown_error':
+      return t('Unknown error.');
+
+    case '3ds_cancelled':
+      return t('User cancelled 3D security password entry.');
+
+    case 'field_invalid_card_number':
+      return t('Missing or invalid credit card number.');
+
+    case 'field_invalid_card_exp_year':
+      return t('Missing or invalid expiry year.');
+
+    case 'field_invalid_card_exp_month':
+      return t('Missing or invalid expiry month.');
+
+    case 'field_invalid_card_exp':
+      return t('Card has expired.');
+
+    case 'field_invalid_card_cvc':
+      return t('Missing or invalid checking number.');
+
+    case 'field_invalid_card_holder':
+      return t('Missing or invalid cardholder name.');
+
+    case 'field_invalid_account_number':
+      return t('Missing or invalid bank account number.');
+
+    case 'field_invalid_account_holder':
+      return t('Missing or invalid bank account holder.');
+
+    case 'field_invalid_bank_code':
+      return t('Missing or invalid zip code.');
+
+    default:
+      return str_replace('_', ' ', $code);
+  }
 }
