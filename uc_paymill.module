@@ -345,6 +345,18 @@ function uc_paymill_libraries_info() {
 }
 
 /**
+ * Helper function - return the encrypted value of the Paymill token.
+ */
+function _uc_paymill_encrypt_token($token) {
+  if ($key = uc_credit_encryption_key()) {
+    $crypt = new UbercartEncryption();
+    $token = $crypt->encrypt($key, $token);
+  }
+
+  return $token;
+}
+
+/**
  * Helper function - decrypts the login data for using Auth.Net APIs.
  */
 function _uc_paymill_get_keys($get_active_keys = FALSE) {
