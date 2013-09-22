@@ -24,10 +24,10 @@ define('UC_PAYMILL_DESCRIPTION_PATTERN', 'Payment processed through the [site-na
  */
 function uc_paymill_uc_payment_gateway() {
   $gateways['paymill'] = array(
-    'title' => t('Paymill'),
+    'title'       => t('Paymill'),
     'description' => t('Process credit card payments using the Paymill API.'),
-    'settings' => 'uc_paymill_settings_form',
-    'credit' => 'uc_paymill_charge',
+    'settings'    => 'uc_paymill_settings_form',
+    'credit'      => 'uc_paymill_charge',
   );
 
   return $gateways;
@@ -120,7 +120,7 @@ function uc_paymill_form_uc_cart_checkout_form_alter(&$form, &$form_state) {
     // Attach currency code and public keys.
     $form['#attached']['js'][] = array(
       'data' => array(
-        'ucPaymill' => array(
+        'ucPaymill'      => array(
           'currencyCode' => variable_get('uc_currency_code'),
           'publicKey'    => $keys->public,
         ),
@@ -148,8 +148,8 @@ function uc_paymill_form_uc_cart_checkout_form_alter(&$form, &$form_state) {
       $total += $product->sell_price;
     }
     $form['uc_paymill']['total'] = array(
-      '#type' => 'hidden',
-      '#value' => $total,
+      '#type'       => 'hidden',
+      '#value'      => $total,
       '#attributes' => array('id' => 'uc-paymill-order-total'),
     );
     // Add text that will be displayed while we are generating Paymill token.
@@ -184,8 +184,7 @@ function uc_paymill_checkout_form_submit($form, &$form_state) {
     drupal_goto('cart/checkout');
   }
   elseif ($form_state['values']['token'] != '') {
-    // Everything is OK. Pass.
-    drupal_set_message('Everything is alright.');
+    // Everything is OK. Encrypt and save the Paymill token to the session.
     $_SESSION['uc_paymill_token'] = _uc_paymill_encrypt_token($form_state['values']['token']);
   }
   elseif ($form_state['values']['errors'] != '') {
@@ -240,29 +239,24 @@ function uc_paymill_settings_form_validate($form, &$form_state) {
  * Main handler for processing credit card transactions.
  */
 function uc_paymill_charge($order_id, $amount, $data) {
-
-  // return array(
-  //   'success' => TRUE,
-  //   'comment' => 'Comment',
-  //   'message' => 'Message',
-  //   'uid'     => 1,
-  // );
-
-  drupal_set_message('Charging');
-
   global $user;
+
+  // Get the keys necessary for communication with Paymill and load the order.
   $keys  = _uc_paymill_get_keys($get_active_keys = TRUE);
   $order = uc_order_load($order_id);
 
-  libraries_load('paymill');
+  // Get API endpoint URL.
   $paymill_api_endpoint = variable_get('uc_paymill_api_endpoint', UC_PAYMILL_API);
+
   // Prepare the order description.
   $description_pattern  = variable_get('uc_paymill_description', UC_PAYMILL_DESCRIPTION_PATTERN);
   $description = strtr($description_pattern, array(
     '[site-name]' => variable_get('site_name'),
     '[order-id]'  => $order->order_id,
   ));
-  // Process the payment.
+
+  // Load Paymill process the payment.
+  libraries_load('paymill');
   $paymill_transaction = new Services_Paymill_Transactions($keys->private, $paymill_api_endpoint);
   $details = array(
     'amount'      => $order->order_total,
@@ -277,8 +271,8 @@ function uc_paymill_charge($order_id, $amount, $data) {
     // Paymill.
     if (is_array($payment['error'])) {
       // If the "error" key is an array, it consists of the following keys:
-      //    messages    => array with $paymillErrorCode => readable message
-      //    field       => field name (amount/currency/token/etc.)
+      //    messages    => array with Paymill error codes.
+      //    field       => field name (amount/currency/token/etc.).
       $messages = array(t('Paymill returned the following error message:'));
       foreach ($payment['error']['messages'] as $error_key => $error_message) {
         $messages[] = t('@field: @message', array('@field' => $payment['error']['field'], '@message' => $error_message));
@@ -286,21 +280,20 @@ function uc_paymill_charge($order_id, $amount, $data) {
       drupal_set_message(implode('<br>', $messages), 'error');
     }
     else {
-      // Payment didn't go through; set error message.
+      // Payment didn't go through; set an error message.
       // Check if Paymill returned a response code.
       $response_code = '';
       if (isset($payment['response_code']) && $payment['response_code'] != '') {
         // Get human-readable message that we can show to the client.
         $response_code = uc_paymill_translate_response_code($payment['response_code']);
       }
-      drupal_set_message(t('Payment processing failed. Error message received: @error. @response_code', array('@error' => $payment['error'], '@response_code' => $response_code)), 'error');
+      drupal_set_message(t('Payment processing failed. Error message received: @error. Response code: @response_code.', array('@error' => $payment['error'], '@response_code' => $response_code)), 'error');
       // Log the error message as well for debugging purposes.
       watchdog('paymill_error', t('Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array('@error_message' => $payment['error'], '@response_code' => $payment['response_code'], '@status_code' => $payment['http_status_code'])));
     }
   }
   else {
     $success = TRUE;
-    dpm($payment);
   }
 
   $result = array(
@@ -318,14 +311,14 @@ function uc_paymill_charge($order_id, $amount, $data) {
  */
 function uc_paymill_libraries_info() {
   $libraries['paymill'] = array(
-    'name' => 'Paymill',
-    'vendor' => 'http://www.paymill.com/',
-    'download_url' => 'https://github.com/paymill/paymill-php/archive/master.zip',
-    'path' => 'lib/Services/Paymill',
+    'name'              => 'Paymill',
+    'vendor'            => 'http://www.paymill.com/',
+    'download_url'      => 'https://github.com/paymill/paymill-php/archive/master.zip',
+    'path'              => 'lib/Services/Paymill',
     'version arguments' => array(
-      'file' => 'lib/Services/Paymill/Apiclient/Curl.php',
-      'pattern' => '@Paymill-php/([0-9\.]+)@',
-      'lines' => 60,
+      'file'            => 'lib/Services/Paymill/Apiclient/Curl.php',
+      'pattern'         => '@Paymill-php/([0-9\.]+)@',
+      'lines'           => 60,
     ),
     'files' => array(
       'php' => array(
@@ -378,7 +371,7 @@ function _uc_paymill_get_token() {
 }
 
 /**
- * Helper function - decrypts the login data for using Auth.Net APIs.
+ * Helper function - decrypts the login data for using Paymill APIs.
  */
 function _uc_paymill_get_keys($get_active_keys = FALSE) {
   static $data;

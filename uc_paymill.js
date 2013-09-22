@@ -12,8 +12,8 @@
     attach: function(context, settings) {
       window.PAYMILL_PUBLIC_KEY = Drupal.settings.ucPaymill.publicKey;
 
-      var submitForm = $('#uc-cart-checkout-form'),
-          submitButton = submitForm.find('#edit-continue'),
+      var submitForm       = $('#uc-cart-checkout-form'),
+          submitButton     = submitForm.find('#edit-continue'),
           submitFormErrors = submitForm.find('#uc-paymill-errors');
 
       submitForm.once('uc_paymill-processed').submit(function(e) {

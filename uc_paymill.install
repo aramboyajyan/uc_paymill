@@ -26,10 +26,10 @@ function uc_paymill_requirements($phase) {
       $severity = REQUIREMENT_ERROR;
     }
     $requirements['uc_paymill_library'] = array(
-      'title' => $t('Paymill library'),
-      'value' => $value,
+      'title'       => $t('Paymill library'),
+      'value'       => $value,
       'description' => $description,
-      'severity' => $severity,
+      'severity'    => $severity,
     );
   }
 
