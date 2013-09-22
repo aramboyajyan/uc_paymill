@@ -255,7 +255,7 @@ function uc_paymill_charge($order_id, $amount, $data) {
     '[order-id]'  => $order->order_id,
   ));
 
-  // Load Paymill process the payment.
+  // Load Paymill and process the payment.
   libraries_load('paymill');
   $paymill_transaction = new Services_Paymill_Transactions($keys->private, $paymill_api_endpoint);
   $details = array(
@@ -265,6 +265,8 @@ function uc_paymill_charge($order_id, $amount, $data) {
     'description' => $description,
   );
   $payment = $paymill_transaction->create($details);
+  // Remove the token from session.
+  unset($_SESSION['uc_paymill_token']);
   if (isset($payment['error'])) {
     $success = FALSE;
     // Check if this is an error related to a specific field passed to 
