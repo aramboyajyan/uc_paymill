@@ -275,11 +275,10 @@ function uc_paymill_charge($order_id, $amount, $data) {
       // If the "error" key is an array, it consists of the following keys:
       //    messages    => array with Paymill error codes.
       //    field       => field name (amount/currency/token/etc.).
-      $messages = array(t('Paymill returned the following error message:'));
+      drupal_set_message(t('Paymill returned the following error message(s):'));
       foreach ($payment['error']['messages'] as $error_key => $error_message) {
-        $messages[] = t('@field: @message', array('@field' => $payment['error']['field'], '@message' => $error_message));
+        drupal_set_message(t('@field: @message', array('@field' => check_plain($payment['error']['field']), '@message' => check_plain($error_message))), 'error');
       }
-      drupal_set_message(implode('<br>', $messages), 'error');
     }
     else {
       // Payment didn't go through; set an error message.
@@ -287,11 +286,12 @@ function uc_paymill_charge($order_id, $amount, $data) {
       $response_code = '';
       if (isset($payment['response_code']) && $payment['response_code'] != '') {
         // Get human-readable message that we can show to the client.
-        $response_code = uc_paymill_translate_response_code($payment['response_code']);
+        // Note: this is already filtered using check_plain() function.
+        $response_code = _uc_paymill_get_error_text($payment['response_code']);
       }
-      drupal_set_message(t('Payment processing failed. Error message received: @error. Response code: @response_code.', array('@error' => $payment['error'], '@response_code' => $response_code)), 'error');
+      drupal_set_message(t('Payment processing failed. Error message received: @error. Response code: @response_code.', array('@error' => check_plain($payment['error']), '@response_code' => $response_code)), 'error');
       // Log the error message as well for debugging purposes.
-      watchdog('paymill_error', t('Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array('@error_message' => $payment['error'], '@response_code' => $payment['response_code'], '@status_code' => $payment['http_status_code'])));
+      watchdog('paymill_error', t('Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array('@error_message' => check_plain($payment['error']), '@response_code' => check_plain($payment['response_code']), '@status_code' => check_plain($payment['http_status_code']))));
     }
   }
   else {
@@ -300,7 +300,11 @@ function uc_paymill_charge($order_id, $amount, $data) {
 
   $result = array(
     'success' => $success,
-    'comment' => t('Card charged via Paymill. Transaction ID: @transaction_id, payment ID: @payment_id, client ID: @client_id.', array('@transaction_id' => $payment['id'], '@payment_id' => $payment['payment']['id'], '@client_id' => $payment['client']['id'])),
+    'comment' => t('Card charged via Paymill. Transaction ID: @transaction_id, payment ID: @payment_id, client ID: @client_id.', array(
+      '@transaction_id' => check_plain($payment['id']),
+      '@payment_id'     => check_plain($payment['payment']['id']),
+      '@client_id'      => check_plain($payment['client']['id'])
+    )),
     'message' => t('Successfully charged'),
     'uid'     => $user->uid,
   );
@@ -482,6 +486,6 @@ function _uc_paymill_get_error_text($code) {
       ));
       // Log it for future reference.
       watchdog('paymill_unrecognized_error', t('Unrecognized error message received from Paymill: @error', array('@error' => $message)));
-      return $message;
+      return check_plain($message);
   }
 }
