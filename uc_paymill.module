@@ -473,6 +473,13 @@ function _uc_paymill_get_error_text($code) {
       return t('Missing or invalid zip code.');
 
     default:
-      return str_replace('_', ' ', $code);
+      // In case the message has not been recognized, try to make it readable.
+      $message = strtr(ucfirst($code), array(
+        'field_' => '',
+        '_'      => ' ',
+      ));
+      // Log it for future reference.
+      watchdog('paymill_unrecognized_error', t('Unrecognized error message received from Paymill: @error', array('@error' => $message)));
+      return $message;
   }
 }
