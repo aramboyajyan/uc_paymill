@@ -402,7 +402,7 @@ function _uc_paymill_get_keys($get_active_keys = FALSE) {
     $live_private = $crypt->decrypt($key, $live_private);
 
     // Store any errors.
-    uc_store_encryption_errors($crypt, 'uc_paymill');
+    uc_store_encryption_errors($crypt, 'uc_paymill_keys');
   }
 
   $mode = variable_get('uc_paymill_mode', 'live');
