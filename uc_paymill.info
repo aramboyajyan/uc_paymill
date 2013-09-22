@@ -1,21 +1,14 @@
 ; ------------------------------------------------------------------------------
+; Ubercart Paymill Integration module
+; 
 ; Module created by Topsitemakers.com
 ; http://www.topsitemakers.com
 ; ------------------------------------------------------------------------------
 
-; ------------------------------------------------------------------------------
-; Ubercart Paymill Integration module
-; ------------------------------------------------------------------------------
 name = Paymill
 description = Integration with <a href="http://www.paymill.com" target="_blank">Paymill</a> payment system.
 package = Ubercart - payment
 core = 7.x
-version = 1.0
-
-; ------------------------------------------------------------------------------
-; Module files
-; ------------------------------------------------------------------------------
-files[] = uc_paymill.module
 
 ; ------------------------------------------------------------------------------
 ; Dependencies

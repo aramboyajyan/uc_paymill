@@ -203,9 +203,9 @@ function uc_paymill_settings_form_submit($form, &$form_state) {
     $crypt = new UbercartEncryption();
 
     // Encrypt the Paymill keys.
-    variable_set('uc_paymill_test_public',  $crypt->encrypt($key, $form_state['values']['uc_paymill_test_public']));
+    variable_set('uc_paymill_test_public', $crypt->encrypt($key, $form_state['values']['uc_paymill_test_public']));
     variable_set('uc_paymill_test_private', $crypt->encrypt($key, $form_state['values']['uc_paymill_test_private']));
-    variable_set('uc_paymill_live_public',  $crypt->encrypt($key, $form_state['values']['uc_paymill_live_public']));
+    variable_set('uc_paymill_live_public', $crypt->encrypt($key, $form_state['values']['uc_paymill_live_public']));
     variable_set('uc_paymill_live_private', $crypt->encrypt($key, $form_state['values']['uc_paymill_live_private']));
 
     // Store any errors.
@@ -269,12 +269,12 @@ function uc_paymill_charge($order_id, $amount, $data) {
   unset($_SESSION['uc_paymill_token']);
   if (isset($payment['error'])) {
     $success = FALSE;
-    // Check if this is an error related to a specific field passed to 
+    // Check if this is an error related to a specific field passed to
     // Paymill.
     if (is_array($payment['error'])) {
       // If the "error" key is an array, it consists of the following keys:
-      //    messages    => array with Paymill error codes.
-      //    field       => field name (amount/currency/token/etc.).
+      // > messages    => array with Paymill error codes.
+      // > field       => field name (amount/currency/token/etc.).
       drupal_set_message(t('Paymill returned the following error message(s):'));
       foreach ($payment['error']['messages'] as $error_key => $error_message) {
         drupal_set_message(t('@field: @message', array('@field' => check_plain($payment['error']['field']), '@message' => check_plain($error_message))), 'error');
@@ -291,7 +291,11 @@ function uc_paymill_charge($order_id, $amount, $data) {
       }
       drupal_set_message(t('Payment processing failed. Error message received: @error. Response code: @response_code.', array('@error' => check_plain($payment['error']), '@response_code' => $response_code)), 'error');
       // Log the error message as well for debugging purposes.
-      watchdog('paymill_error', 'Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array('@error_message' => check_plain($payment['error']), '@response_code' => check_plain($payment['response_code']), '@status_code' => check_plain($payment['http_status_code'])));
+      watchdog('paymill_error', 'Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array(
+        '@error_message' => check_plain($payment['error']),
+        '@response_code' => check_plain($payment['response_code']),
+        '@status_code'   => check_plain($payment['http_status_code'])
+      ));
     }
   }
   else {
@@ -386,9 +390,9 @@ function _uc_paymill_get_keys($get_active_keys = FALSE) {
     return $data;
   }
 
-  $test_public  = variable_get('uc_paymill_test_public',  '');
+  $test_public  = variable_get('uc_paymill_test_public', '');
   $test_private = variable_get('uc_paymill_test_private', '');
-  $live_public  = variable_get('uc_paymill_live_public',  '');
+  $live_public  = variable_get('uc_paymill_live_public', '');
   $live_private = variable_get('uc_paymill_live_private', '');
 
   // If CC encryption has been configured properly.
@@ -431,7 +435,7 @@ function _uc_paymill_get_keys($get_active_keys = FALSE) {
     );
   }
 
-  return (object)$data;
+  return (object) $data;
 }
 
 /**

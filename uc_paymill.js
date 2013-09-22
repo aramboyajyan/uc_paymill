@@ -1,4 +1,3 @@
-
 /**
  * @file
  * JS for generating authentication tokens for Paymill.
