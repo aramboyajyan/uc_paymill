@@ -357,6 +357,27 @@ function _uc_paymill_encrypt_token($token) {
 }
 
 /**
+ * Helper function - get the token from session and decrypt it.
+ */
+function _uc_paymill_get_token() {
+  static $token;
+
+  if (!empty($token)) {
+    return $token;
+  }
+
+  $token = $_SESSION['uc_paymill_token'];
+
+  if ($key = uc_credit_encryption_key()) {
+    $crypt = new UbercartEncryption();
+    $token = $crypt->decrypt($key, $token);
+    uc_store_encryption_errors($crypt, 'uc_paymill_token');
+  }
+
+  return $token;
+}
+
+/**
  * Helper function - decrypts the login data for using Auth.Net APIs.
  */
 function _uc_paymill_get_keys($get_active_keys = FALSE) {
