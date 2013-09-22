@@ -276,7 +276,7 @@ function uc_paymill_charge($order_id, $amount, $data) {
       // > messages    => array with Paymill error codes.
       // > field       => field name (amount/currency/token/etc.).
       drupal_set_message(t('Paymill returned the following error message(s):'));
-      foreach ($payment['error']['messages'] as $error_key => $error_message) {
+      foreach ($payment['error']['messages'] as $error_message) {
         drupal_set_message(t('@field: @message', array('@field' => check_plain($payment['error']['field']), '@message' => check_plain($error_message))), 'error');
       }
     }
@@ -294,7 +294,7 @@ function uc_paymill_charge($order_id, $amount, $data) {
       watchdog('paymill_error', 'Paymill processing failed. Error message: @error_message. HTTP status code: @status_code. Response code: @response_code.', array(
         '@error_message' => check_plain($payment['error']),
         '@response_code' => check_plain($payment['response_code']),
-        '@status_code'   => check_plain($payment['http_status_code'])
+        '@status_code'   => check_plain($payment['http_status_code']),
       ));
     }
   }
@@ -307,7 +307,7 @@ function uc_paymill_charge($order_id, $amount, $data) {
     'comment' => t('Card charged via Paymill. Transaction ID: @transaction_id, payment ID: @payment_id, client ID: @client_id.', array(
       '@transaction_id' => check_plain($payment['id']),
       '@payment_id'     => check_plain($payment['payment']['id']),
-      '@client_id'      => check_plain($payment['client']['id'])
+      '@client_id'      => check_plain($payment['client']['id']),
     )),
     'message' => t('Successfully charged'),
     'uid'     => $user->uid,
