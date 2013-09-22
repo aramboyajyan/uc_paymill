@@ -186,7 +186,7 @@ function uc_paymill_checkout_form_submit($form, &$form_state) {
   elseif ($form_state['values']['token'] != '') {
     // Everything is OK. Pass.
     drupal_set_message('Everything is alright.');
-    $_SESSION['uc_paymill_token'] = $form_state['values']['token'];
+    $_SESSION['uc_paymill_token'] = _uc_paymill_encrypt_token($form_state['values']['token']);
   }
   elseif ($form_state['values']['errors'] != '') {
     drupal_set_message(t('The following error occurred: @uc_paymill_error', array('@uc_paymill_error' => _uc_paymill_get_error_text($form_state['values']['errors']))), 'error');
@@ -267,7 +267,7 @@ function uc_paymill_charge($order_id, $amount, $data) {
   $details = array(
     'amount'      => $order->order_total,
     'currency'    => variable_get('uc_currency_code'),
-    'token'       => $_SESSION['uc_paymill_token'],
+    'token'       => _uc_paymill_get_token(),
     'description' => $description,
   );
   $payment = $paymill_transaction->create($details);
