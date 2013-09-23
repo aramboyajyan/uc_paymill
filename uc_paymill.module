@@ -9,10 +9,12 @@
  */
 
 /**
- * Constants used in the module.
+ * Module constants.
+ * 
+ * The constants below are just used as defaults before the user enters those
+ * values in the admin.
  */
-// Paymill API endpoint; this will be used as a default in case the user did
-// not enter a new one in the admin.
+// Paymill API endpoint.
 define('UC_PAYMILL_API', 'https://api.paymill.de/v2/');
 // URL to the Paymill JS bridge.
 define('UC_PAYMILL_BRIDGE', 'https://bridge.paymill.com/');
