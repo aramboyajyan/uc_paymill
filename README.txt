@@ -20,8 +20,11 @@ address bar, might make them leave.
 INSTALLATION INSTRUCTIONS
 
 1. Just download this module and place it in any known Drupal module directory
-(e.g. sites/all/modules, sites/default/modules etc.) or install it using Drush
-with: drush dl uc_paymill.
+(e.g. sites/all/modules, sites/default/modules etc.) or download it using
+Drush with: drush dl uc_paymill.
+Note: you must have Ubercart downloaded and installed in order to use this
+module. Drush is not able to download Ubercart automatically as it is a group
+of modules and not a single one.
 
 2. This module requires you to download Paymill PHP Library for making calls
 to Paymill and processing transactions.
@@ -62,5 +65,5 @@ the credit card details.
 - Paymill responds with success message/error details if the transaction has
 been processed successfully
 
-Development sponsored by: Topsitemakers
-http://www.topsitemakers.com/
+Development sponsored by: Arani Group, Inc.
+http://www.aranigroup.com/
