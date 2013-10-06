@@ -492,6 +492,6 @@ function _uc_paymill_get_error_text($code) {
       ));
       // Log it for future reference.
       watchdog('paymill_unrecognized_error', 'Unrecognized error message received from Paymill: @error', array('@error' => $message));
-      return check_plain($message);
+      return $message;
   }
 }
