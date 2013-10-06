@@ -43,6 +43,13 @@ function uc_paymill_requirements($phase) {
  * Implements hook_uninstall().
  */
 function uc_paymill_uninstall() {
-  // Remove all variables used in the module at once.
-  db_query("DELETE FROM {variable} WHERE name LIKE :variables", array(':variables' => 'uc_paymill_%'));
+  // Remove all variables used in the module.
+  variable_del('uc_paymill_description');
+  variable_del('uc_paymill_api_endpoint');
+  variable_del('uc_paymill_bridge');
+  variable_del('uc_paymill_mode');
+  variable_del('uc_paymill_test_public');
+  variable_del('uc_paymill_test_private');
+  variable_del('uc_paymill_live_public');
+  variable_del('uc_paymill_live_private');
 }
