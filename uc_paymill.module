@@ -49,7 +49,7 @@ function uc_paymill_settings_form($form, &$form_state) {
   );
   $form['uc_paymill_general']['uc_paymill_description'] = array(
     '#type' => 'textfield',
-    '#title' => t('Description'),
+    '#title' => t('Order Description for Paymill'),
     '#description' => t('Order description text that will be displayed in Paymill administration pages. You may use [site-name] and [order-id] tokens.'),
     '#default_value' => variable_get('uc_paymill_description', UC_PAYMILL_DESCRIPTION_PATTERN),
   );
