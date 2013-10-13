@@ -154,14 +154,6 @@ function uc_paymill_form_uc_cart_checkout_form_alter(&$form, &$form_state) {
       '#value'      => $total,
       '#attributes' => array('id' => 'uc-paymill-order-total'),
     );
-    // Add text that will be displayed while we are generating Paymill token.
-    // This has to be here because we are processing the payment through JS -
-    // meaning the user should be notified that the process is taking place
-    // and he/she should wait.
-    $form['actions']['continue']['#attributes'] = array(
-      'data-value-default'    => $form['actions']['continue']['#value'],
-      'data-value-processing' => t('Please wait'),
-    );
     $form['#submit'][] = 'uc_paymill_checkout_form_submit';
   }
 }
