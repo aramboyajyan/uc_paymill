@@ -75,6 +75,12 @@ function uc_paymill_settings_form($form, &$form_state) {
       'test' => t('Test'),
     ),
   );
+  $form['uc_paymill_general']['uc_paymill_debugging_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable debugging'),
+    '#description' => t('Enables debugging of Paymill response during checkout. If the <a href="http://drupal.org/project/devel" target="_blank">Devel</a> module is installed, it will display full Paymill transaction object on the screen.'),
+    '#default_value' => variable_get('uc_paymill_debugging_enabled', FALSE),
+  );
   // Test settings.
   $form['uc_paymill_test'] = array(
     '#type' => 'fieldset',
@@ -259,6 +265,20 @@ function uc_paymill_charge($order_id, $amount, $data) {
     'description' => $description,
   );
   $payment = $paymill_transaction->create($details);
+  // If the debugging is enabled, log the complete $payment and $details
+  // objects to the database.
+  if (variable_get('uc_paymill_debugging_enabled', FALSE)) {
+    watchdog('uc_paymill_debug', '$details object: @details', array('@details' => print_r($details, TRUE)));
+    watchdog('uc_paymill_debug', '$payment object: @payment', array('@payment' => print_r($payment, TRUE)));
+    // If the Devel module is enabled, display the $payment object right on
+    // the screen.
+    if (module_exists('devel')) {
+      drupal_set_message(t('$details variable:'));
+      dpm($details);
+      drupal_set_message(t('$payment variable:'));
+      dpm($payment);
+    }
+  }
   // Remove the token from session.
   unset($_SESSION['uc_paymill_token']);
   if (isset($payment['error'])) {
