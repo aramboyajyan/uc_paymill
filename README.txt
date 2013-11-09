@@ -1,3 +1,11 @@
+IMPORTANT
+
+This is just a mirror of the original repository at Drupal.org:
+https://drupal.org/project/uc_paymill
+
+For any issues, questions or enhancements use the official issue queue at Drupal.org:
+https://drupal.org/project/issues/uc_paymill?categories=All
+
 UBERCART PAYMILL INTEGRATION
 
 Module for integration with Paymill (https://www.paymill.com/) payment
