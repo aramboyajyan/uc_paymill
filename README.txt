@@ -52,8 +52,12 @@ structure looks like this:
 
 GitHub project page:
 https://github.com/paymill/paymill-php/
-Direct download link:
-https://github.com/paymill/paymill-php/archive/master.zip
+
+IMPORTANT:
+Paymill has significantly updated their PHP Library and latest library will
+not work with this module. Follow the download link below as it contains the
+old library which should work without problems:
+http://www.w3b4.com/projects/paymill.zip
 
 3. Get your API keys in Paymill admin area and enter them in your website at
 "Paymill" tab here: admin/store/settings/payment/method/credit.
